@@ -64,12 +64,24 @@ import java.util.concurrent.TimeUnit;
  *
  * mechanism机制
  * in a more flexible way以更灵活的方式
+ * involve涉及
+ * involving涉及
+ * occasions
+ * 范围机制让编写监视器锁变得更简单，帮助避免很多常见的涉及锁的编程错误，
+ * 在某些情况下，您需要以更灵活的方式使用锁。例如，用于遍历并发访问的数据结构的一些算法需要使用手动或链锁定：
+ * 获取节点A的锁，然后获取节点B，然后释放A并获取C，然后释放B并获取D和等等。
+ * 通过允许在不同范围内获取和释放锁，并允许以任何顺序获取和释放多个锁，接口的实现使得能够使用这种技术。
  *
  * <p>With this increased flexibility comes additional
  * responsibility. The absence of block-structured locking removes the
  * automatic release of locks that occurs with {@code synchronized}
  * methods and statements. In most cases, the following idiom
  * should be used:
+ *
+ * flexibility灵活性
+ * absence缺少
+ * idiom习语、惯用语法
+ * 随着这种增加的灵活性，附加责任。缺少块结构锁定会消除方法和语句发生的锁的自动释放。在大多数情况下，应使用以下用法，手动获取和释放锁
  *
  * <pre><tt>     Lock l = ...;
  *     l.lock();
@@ -84,6 +96,7 @@ import java.util.concurrent.TimeUnit;
  * taken to ensure that all code that is executed while the lock is
  * held is protected by try-finally or try-catch to ensure that the
  * lock is released when necessary.
+ * 当锁定和解锁发生在不同的范围内时，必须注意确保在保持锁定时执行的所有代码都受try-finally或try-catch的保护，以确保在必要时释放锁定
  *
  * <p>{@code Lock} implementations provide additional functionality
  * over the use of {@code synchronized} methods and statements by
@@ -92,11 +105,22 @@ import java.util.concurrent.TimeUnit;
  * interrupted ({@link #lockInterruptibly}, and an attempt to acquire
  * the lock that can timeout ({@link #tryLock(long, TimeUnit)}).
  *
+ * 通过提供非阻塞的方式获取锁，尝试获取(tryLock)可能被中断的锁(lockInterruptibly)以及尝试获取可能超时的锁(tryLock(long, TimeUnit))，
+ * Lock的实现提供了比Synchronized方法和语句更多的额外功能。
+ *
  * <p>A {@code Lock} class can also provide behavior and semantics
  * that is quite different from that of the implicit monitor lock,
  * such as guaranteed ordering, non-reentrant usage, or deadlock
  * detection. If an implementation provides such specialized semantics
  * then the implementation must document those semantics.
+ *
+ * behavior行为
+ * semantics语义
+ * implicit隐式
+ * implicit monitor lock隐式监视器锁
+ * non-reentrant非重入
+ * Lock类还可以提供与隐式监视器锁完全不同的行为和语义，例如保证排序，非重入使用或死锁检测。
+ * 如果实现提供了这样的专用语义，那么实现必须记录那些语义。
  *
  * <p>Note that {@code Lock} instances are just normal objects and can
  * themselves be used as the target in a {@code synchronized} statement.
@@ -106,9 +130,15 @@ import java.util.concurrent.TimeUnit;
  * It is recommended that to avoid confusion you never use {@code Lock}
  * instances in this way, except within their own implementation.
  *
+ * 请注意，Lock实例只是普通对象，它们本身可以用作synchronized语句中的目标。
+ * 获取Lock实例的监视器锁定与调用该实例的任何锁定方法没有特别的关系。
+ * 为避免混淆，建议您不要以这种方式使用Lock实例，除非在他们自己的实现中。
+ *
  * <p>Except where noted, passing a {@code null} value for any
  * parameter will result in a {@link NullPointerException} being
  * thrown.
+ *
+ * 除非另有说明，否则任何参数传递null值将导致抛出NullPointerException。
  *
  * <h3>Memory Synchronization</h3>
  *
@@ -116,18 +146,27 @@ import java.util.concurrent.TimeUnit;
  * memory synchronization semantics as provided by the built-in monitor
  * lock, as described in <a href="http://java.sun.com/docs/books/jls/">
  * The Java Language Specification, Third Edition (17.4 Memory Model)</a>:
+ *
+ * 所有Lock实现必须强制执行内置监视器锁提供的相同内存同步语义，
+ * 如<a href="http://java.sun.com/docs/books/jls/"> Java语言规范中所述，第三版（17.4内存模型）</a>
+ *
  * <ul>
  * <li>A successful {@code lock} operation has the same memory
  * synchronization effects as a successful <em>Lock</em> action.
  * <li>A successful {@code unlock} operation has the same
  * memory synchronization effects as a successful <em>Unlock</em> action.
  * </ul>
+ * 一个成功的加锁(指synchronized加锁)操作，与一个成功的Lock动作，有相同的内存同步效果。
+ * 一个成功的解锁(指synchronized解锁)操作，与一个成功的Unlock动作，有相同的内存同步效果。
  *
  * Unsuccessful locking and unlocking operations, and reentrant
  * locking/unlocking operations, do not require any memory
  * synchronization effects.
  *
+ * 不成功的锁定和解锁操作，以及重入锁定/解锁操作，不需要任何内存同步效果。
+ *
  * <h3>Implementation Considerations</h3>
+ * 实现注意事项
  *
  * <p> The three forms of lock acquisition (interruptible,
  * non-interruptible, and timed) may differ in their performance
@@ -144,11 +183,33 @@ import java.util.concurrent.TimeUnit;
  * acquisition is supported: which is either totally, or only on
  * method entry.
  *
+ * Further此外
+ * ongoing正在进行
+ * Consequently因此
+ * define定义
+ * exactly完全
+ * clearly清楚地
+ * document记录
+ * obey遵守
+ * extent程度
+ * to the extent到…的程度
+ * 锁定获取的三种形式（可中断，不可中断和定时）可能在性能特征，排序保证或其他实现质量方面有所不同。
+ * 此外，在给定的Lock类中可能无法中断正在进行的锁定获取的能力。
+ * 因此，不需要实现为所有三种形式的锁获取定义完全相同的保证或语义，也不需要支持正在进行的锁获取的中断。
+ * 需要一种实现来清楚地记录每种锁定方法提供的语义和保证。它还必须遵守此接口中定义的中断语义，以支持锁获取的中断：完全或仅在方法入口上。
+ *
  * <p>As interruption generally implies cancellation, and checks for
  * interruption are often infrequent, an implementation can favor responding
  * to an interrupt over normal method return. This is true even if it can be
  * shown that the interrupt occurred after another action may have unblocked
  * the thread. An implementation should document this behavior.
+ *
+ * imply，implies意味着
+ * infrequent不常见
+ * favor有利于
+ * 
+ * 由于中断通常意味着取消，并且中断检查通常不常见，因此实现可以有利于响应正常方法返回的中断。
+ * 即使可以显示在另一个操作可能已取消阻塞线程之后发生中断，也是如此。实现应记录此行为。
  *
  * @see ReentrantLock
  * @see Condition
