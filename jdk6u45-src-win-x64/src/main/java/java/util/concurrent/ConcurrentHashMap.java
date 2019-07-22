@@ -25,6 +25,11 @@ import java.io.ObjectOutputStream;
  * interoperable with <tt>Hashtable</tt> in programs that rely on its
  * thread safety but not on its synchronization details.
  *
+ * 一个哈希表，支持完全并发的获取、适应预期并发的更新。这个类遵从了Hashtable一样的功能规范，
+ * 包含了与Hashtable每个方法相对应的不同版本的方法。但是，即使所有的操作都是线程安全的，
+ * 取值操作不需要加锁，并且也不支持一种方式锁定整个表以阻止所有的访问。
+ * 这个类与Hashtable在程序中能实现相同的线程安全的效果，但同步的实现细节不一样。
+ *
  * <p> Retrieval operations (including <tt>get</tt>) generally do not
  * block, so may overlap with update operations (including
  * <tt>put</tt> and <tt>remove</tt>). Retrievals reflect the results
@@ -69,7 +74,9 @@ import java.io.ObjectOutputStream;
  * @since 1.5
  * @author Doug Lea
  * @param <K> the type of keys maintained by this map
+ *           这个map维护的keys的类型
  * @param <V> the type of mapped values
+ *           映射的值的类型
  */
 public class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
         implements ConcurrentMap<K, V>, Serializable {
