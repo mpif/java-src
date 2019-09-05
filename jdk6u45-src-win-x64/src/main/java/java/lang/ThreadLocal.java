@@ -159,10 +159,19 @@ public class ThreadLocal<T> {
      */
     public void set(T value) {
         Thread t = Thread.currentThread();
+        /**
+         * ThreadLocalMap是从当前线程中获取的
+         */
         ThreadLocalMap map = getMap(t);
         if (map != null)
+            /**
+             * ThreadLocalMap的key是ThreadLocal对象，而不是当前线程
+             */
             map.set(this, value);
         else
+            /**
+             * 创建Thread里面的threadLocals对象
+             */
             createMap(t, value);
     }
 
