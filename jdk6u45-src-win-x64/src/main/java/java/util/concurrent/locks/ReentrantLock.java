@@ -230,6 +230,8 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     /**
      * Creates an instance of {@code ReentrantLock}.
      * This is equivalent to using {@code ReentrantLock(false)}.
+     * 创建一个ReentrantLock对象，相当于ReentrantLock(false)
+     * 默认是非公平锁
      */
     public ReentrantLock() {
         sync = new NonfairSync();
