@@ -224,36 +224,54 @@ public interface Lock {
 
     /**
      * Acquires the lock.
+     * 获得锁
      *
      * <p>If the lock is not available then the current thread becomes
      * disabled for thread scheduling purposes and lies dormant until the
      * lock has been acquired.
+     * 如果锁不可用，则当前线程变为出于线程调度目的而禁用并处于休眠状态，直到已获得锁。
      *
      * <p><b>Implementation Considerations</b>
+     * 实施注意事项（实现注意事项）
      *
      * <p>A {@code Lock} implementation may be able to detect erroneous use
      * of the lock, such as an invocation that would cause deadlock, and
      * may throw an (unchecked) exception in such circumstances.  The
      * circumstances and the exception type must be documented by that
      * {@code Lock} implementation.
+     * Lock 实现可能能够检测到错误使用锁，例如会导致死锁的调用，以及在这种情况下可能会抛出（未经检查的）异常。
+     * 这情况和异常类型必须由锁实现来记录。
+     *
+     * lies dormant-处于休眠状态
+     * dormant-休眠的
+     * erroneous-错误
+     * detect-探测
+     * circumstances-情况
+     *
      */
     void lock();
 
     /**
      * Acquires the lock unless the current thread is
      * {@linkplain Thread#interrupt interrupted}.
+     * 获取锁，除非当前线程被Thread.interrupt中断。
      *
      * <p>Acquires the lock if it is available and returns immediately.
+     * 如果可用，则获取锁并立即返回。
      *
      * <p>If the lock is not available then the current thread becomes
      * disabled for thread scheduling purposes and lies dormant until
      * one of two things happens:
+     * 如果锁不可用，则当前线程变为出于线程调度目的而禁用并处于休眠状态，
+     * 直到发生以下两种情况之一：
      *
      * <ul>
      * <li>The lock is acquired by the current thread; or
      * <li>Some other thread {@linkplain Thread#interrupt interrupts} the
      * current thread, and interruption of lock acquisition is supported.
      * </ul>
+     *      锁被当前线程获取；
+     *      或者其他一些线程中断了当前线程，支持中断获取锁。
      *
      * <p>If the current thread:
      * <ul>
@@ -263,39 +281,54 @@ public interface Lock {
      * </ul>
      * then {@link InterruptedException} is thrown and the current thread's
      * interrupted status is cleared.
+     * 如果当前线程：
+     *    在进入这个方法时设置了中断状态；
+     *    或者获取锁的时候被中断，支持中断获取锁。
      *
      * <p><b>Implementation Considerations</b>
+     * 实施注意事项
      *
      * <p>The ability to interrupt a lock acquisition in some
      * implementations may not be possible, and if possible may be an
      * expensive operation.  The programmer should be aware that this
      * may be the case. An implementation should document when this is
      * the case.
+     * 在某些实现中，中断获取锁的能力可能是不可能的，如果可能的话，这可能是一项昂贵的操作。
+     * 程序员应该意识到可能是这种情况。在这种情况下，实现应该记录。
+     * aware-意识
      *
      * <p>An implementation can favor responding to an interrupt over
      * normal method return.
+     * 一个实现可以倾向于响应中断而不是正常方法返回
      *
      * <p>A {@code Lock} implementation may be able to detect
      * erroneous use of the lock, such as an invocation that would
      * cause deadlock, and may throw an (unchecked) exception in such
      * circumstances.  The circumstances and the exception type must
      * be documented by that {@code Lock} implementation.
+     * 一个Lock的实现可能能够检测到错误使用锁，例如一个调用可能导致死锁，并可能在这种情况下抛出（未经检查的）异常情况。
+     * 这种情况和异常类型必须由这个Lock的实现来记录。
      *
      * @throws InterruptedException if the current thread is
      *         interrupted while acquiring the lock (and interruption
      *         of lock acquisition is supported).
+     * 抛出InterruptedException异常, 如果当前线程获取锁时被中断了（支持中断）
      */
     void lockInterruptibly() throws InterruptedException;
 
     /**
      * Acquires the lock only if it is free at the time of invocation.
+     * 仅在调用的空闲时间才获取锁。
      *
      * <p>Acquires the lock if it is available and returns immediately
      * with the value {@code true}.
      * If the lock is not available then this method will return
      * immediately with the value {@code false}.
+     * 获取锁如果锁可用并直接返回true
+     * 如果锁不可用则直接返回false
      *
      * <p>A typical usage idiom for this method would be:
+     *    这个方法一个典型的使用模板如下：
      * <pre>
      *      Lock lock = ...;
      *      if (lock.tryLock()) {
@@ -310,29 +343,39 @@ public interface Lock {
      * </pre>
      * This usage ensures that the lock is unlocked if it was acquired, and
      * doesn't try to unlock if the lock was not acquired.
+     * 这种用法可确保在获得锁时解锁，并且如果未获得锁，则不会尝试解锁。
      *
      * @return {@code true} if the lock was acquired and
      *         {@code false} otherwise
+     * 返回true如果获取到锁，否则返回false
      */
     boolean tryLock();
 
     /**
      * Acquires the lock if it is free within the given waiting time and the
      * current thread has not been {@linkplain Thread#interrupt interrupted}.
+     * 如果在给定的等待时间内空闲，则获取锁，当前线程未被Thread.interrupt()中断。
      *
      * <p>If the lock is available this method returns immediately
      * with the value {@code true}.
      * If the lock is not available then
      * the current thread becomes disabled for thread scheduling
      * purposes and lies dormant until one of three things happens:
+     * 如果锁可用，则此方法立即返回true。
+     * 如果锁不可用，则当前线程被禁用以进行线程调度目的并处于休眠状态，直到发生以下三件事之一：
+     *
      * <ul>
      * <li>The lock is acquired by the current thread; or
      * <li>Some other thread {@linkplain Thread#interrupt interrupts} the
      * current thread, and interruption of lock acquisition is supported; or
      * <li>The specified waiting time elapses
      * </ul>
+     *     (1)锁被当前线程获取；
+     *     (2)一些其他线程中断了当前线程, (获取锁支持中断)
+     *     (3)或者经过指定的等待时间。
      *
      * <p>If the lock is acquired then the value {@code true} is returned.
+     *   如果锁被获取到了，则返回true。
      *
      * <p>If the current thread:
      * <ul>
@@ -342,44 +385,64 @@ public interface Lock {
      * </ul>
      * then {@link InterruptedException} is thrown and the current thread's
      * interrupted status is cleared.
+     * 如果当前线程：
+     *    (1)在进入此方法时设置其中断状态；
+     *    (2)或者获取锁时被中断（支持中断）
+     * 那么将抛出InterruptedException异常, 当前线程的中断状态将被清除。
      *
      * <p>If the specified waiting time elapses then the value {@code false}
      * is returned.
      * If the time is
      * less than or equal to zero, the method will not wait at all.
+     * 如果指定的等待时间过去了，则返回false；
+     * 如果时间小于或者等于0， 则该方法根本就不会等待。
      *
      * <p><b>Implementation Considerations</b>
+     * 实施注意事项
      *
      * <p>The ability to interrupt a lock acquisition in some implementations
-     * may not be possible, and if possible may
-     * be an expensive operation.
+     * may not be possible, and if possible may be an expensive operation.
      * The programmer should be aware that this may be the case. An
      * implementation should document when this is the case.
+     * 在某些实现中, 中断锁定获取的能力可能是不可能的，如果可能的话也是一个昂贵的操作。
+     * 程序员应该意识到可能是这种情况。
+     * 如果是这种情况下，实现类应该记录下。
      *
      * <p>An implementation can favor responding to an interrupt over normal
      * method return, or reporting a timeout.
+     * 与正常方法返回的情况相比，实现类可以更倾向于响应中断，或者报告超时
      *
      * <p>A {@code Lock} implementation may be able to detect
      * erroneous use of the lock, such as an invocation that would cause
      * deadlock, and may throw an (unchecked) exception in such circumstances.
      * The circumstances and the exception type must be documented by that
      * {@code Lock} implementation.
+     * 一个Lock的实现可能需要能够检测到错误使用锁，例如调用会导致死锁，
+     * 在这种情况下可能会抛出（未经检查的）异常。
+     * 这种情况和异常类型必须该Lock实现记录一下。
      *
      * @param time the maximum time to wait for the lock
+     *        最大等待时间
      * @param unit the time unit of the {@code time} argument
+     *        时间单位
      * @return {@code true} if the lock was acquired and {@code false}
      *         if the waiting time elapsed before the lock was acquired
+     *        如果获取到锁，则返回true；
+     *        如果超过等待时间，则返回false。
      *
      * @throws InterruptedException if the current thread is interrupted
      *         while acquiring the lock (and interruption of lock
      *         acquisition is supported)
+     * 抛出InterruptedException异常, 如果当前线程被中断的话。（需支持中断）
      */
     boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
 
     /**
      * Releases the lock.
+     * 释放锁
      *
      * <p><b>Implementation Considerations</b>
+     * 实施注意事项
      *
      * <p>A {@code Lock} implementation will usually impose
      * restrictions on which thread can release a lock (typically only the
@@ -387,27 +450,45 @@ public interface Lock {
      * an (unchecked) exception if the restriction is violated.
      * Any restrictions and the exception
      * type must be documented by that {@code Lock} implementation.
+     *
+     * 一个Lock实现通常会强加限制，限制哪个线程可以释放锁（通常只有锁的持有者可以释放它）
+     * 如果违反限制，则抛出（未经检查的）异常。
+     * 任何限制和例外类型必须由Lock的实现来记录。
+     *
+     * impose-强加
+     * violate-违反
+     *
      */
     void unlock();
 
     /**
      * Returns a new {@link Condition} instance that is bound to this
      * {@code Lock} instance.
+     * 返回一个绑定到这个Lock实例上的新Condition对象
      *
      * <p>Before waiting on the condition the lock must be held by the
      * current thread.
      * A call to {@link Condition#await()} will atomically release the lock
      * before waiting and re-acquire the lock before the wait returns.
+     * 在等待条件之前，锁必须由当前线程持有。
+     * 一个Condition.await()的调用，在等待之前将自动释放锁
+     * 并在等待返回之前重新获取锁。
      *
      * <p><b>Implementation Considerations</b>
+     * 实施注意事项
      *
      * <p>The exact operation of the {@link Condition} instance depends on
      * the {@code Lock} implementation and must be documented by that
      * implementation.
+     * 这个Condition实例，确切的操作取决于Lock实现。
+     * Lock实现必须记录它。
      *
      * @return A new {@link Condition} instance for this {@code Lock} instance
      * @throws UnsupportedOperationException if this {@code Lock}
      *         implementation does not support conditions
+     * 返回这个Lock对象的一个新的Condition实例,
+     * 如果这个Lock实现不支持conditions, 则抛出UnsupportedOperationException异常
+     * 
      */
     Condition newCondition();
 }
