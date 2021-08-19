@@ -40,11 +40,12 @@ import java.util.concurrent.TimeUnit;
  * order, and all locks must be released in the same lexical scope in which
  * they were acquired.
  *
- * acquisition获得
- * block-structured块结构
- * occur发生
- * opposite相反
- * lexical词法
+ * implicit-隐含的
+ * acquisition-获得
+ * block-structured-块结构
+ * occur-发生
+ * opposite-相反
+ * lexical-词法
  * 使用了synchronized的方法或语句，可以访问关联在每个对象上的隐式监视器锁，但是强制所有锁以块结构的方式去获得和释放：
  * 当多个锁被获得时，他们必须以相反的顺序被释放，所有的锁必须在他们获得锁的相同词法范围释放。
  *
@@ -66,7 +67,8 @@ import java.util.concurrent.TimeUnit;
  * in a more flexible way以更灵活的方式
  * involve涉及
  * involving涉及
- * occasions
+ * occasions-场合
+ * traversing-遍历
  * 范围机制让编写监视器锁变得更简单，帮助避免很多常见的涉及锁的编程错误，
  * 在某些情况下，您需要以更灵活的方式使用锁。例如，用于遍历并发访问的数据结构的一些算法需要使用手动或链锁定：
  * 获取节点A的锁，然后获取节点B，然后释放A并获取C，然后释放B并获取D和等等。
