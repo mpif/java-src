@@ -488,7 +488,7 @@ public interface Lock {
      *         implementation does not support conditions
      * 返回这个Lock对象的一个新的Condition实例,
      * 如果这个Lock实现不支持conditions, 则抛出UnsupportedOperationException异常
-     * 
+     *
      */
     Condition newCondition();
 }
