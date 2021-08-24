@@ -575,6 +575,7 @@ public abstract class AbstractQueuedSynchronizer
 
     /**
      * Creates and enqueues node for given thread and mode.
+     * 为当前线程以给定的模式创建节点, 并将该节点加入到等待队列中。
      *
      * @param current the thread
      * @param mode Node.EXCLUSIVE for exclusive, Node.SHARED for shared
@@ -824,6 +825,8 @@ public abstract class AbstractQueuedSynchronizer
     /**
      * Acquires in exclusive uninterruptible mode for thread already in
      * queue. Used by condition wait methods as well as acquire.
+     * 为已经在队列里的线程，以独占不间断的方式获取锁。
+     * 被Condition.wait()方法和acquire()方法使用
      *
      * @param node the node
      * @param arg the acquire argument
@@ -1169,10 +1172,16 @@ public abstract class AbstractQueuedSynchronizer
      * repeatedly blocking and unblocking, invoking {@link
      * #tryAcquire} until success.  This method can be used
      * to implement method {@link Lock#lock}.
+     * 以独占模式获取, 忽略中断.
+     * 实现至少调用一次, 成功即返回。否则这个线程就会被排队，可能反复的阻塞、解除阻塞、调用tryAcquire方法直到成功。
+     * 这个方法可以用来实现Lock.lock()方法。
      *
      * @param arg the acquire argument.  This value is conveyed to
      *        {@link #tryAcquire} but is otherwise uninterpreted and
      *        can represent anything you like.
+     *  获取参数. 这个值被传递给tryAcquire方法, 但未中断
+     *  可以代表任何你喜欢的东西
+     *
      */
     public final void acquire(int arg) {
         if (!tryAcquire(arg) &&

@@ -843,11 +843,14 @@ class Thread implements Runnable {
 
     /**
      * Interrupts this thread.
-     * 
+     * 中断此线程
+     *
      * <p> Unless the current thread is interrupting itself, which is
      * always permitted, the {@link #checkAccess() checkAccess} method
      * of this thread is invoked, which may cause a {@link
      * SecurityException} to be thrown.
+     * 除非当前线程正在中断自己, 这总是被允许的,
+     * 这个线程的checkAccess()方法被调用, 该方法可能抛出SecurityException异常
      *
      * <p> If this thread is blocked in an invocation of the {@link
      * Object#wait() wait()}, {@link Object#wait(long) wait(long)}, or {@link
@@ -856,23 +859,35 @@ class Thread implements Runnable {
      * #join(long, int)}, {@link #sleep(long)}, or {@link #sleep(long, int)},
      * methods of this class, then its interrupt status will be cleared and it
      * will receive an {@link InterruptedException}.
+     * 如果这个线程在调用
+     * Object.wait()、Object.wait(long)、Object.wait(long, int)、
+     * join()、join(long)、join(long, int)、
+     * sleep(long)、sleep(long, int)
+     * 这些方法时被阻塞, 那么它的中断状态将会被清除, 将收到一个InterruptedException异常
+     *
      *
      * <p> If this thread is blocked in an I/O operation upon an {@link
      * java.nio.channels.InterruptibleChannel </code>interruptible
      * channel<code>} then the channel will be closed, the thread's interrupt
      * status will be set, and the thread will receive a {@link
      * java.nio.channels.ClosedByInterruptException}.
+     * 如果这个线程在一个IO操作（java.nio.channels.InterruptibleChannel）中阻塞, 那么这个通道会被关闭,
+     * 线程的中断状态会被设置, 这个线程会收到一个java.nio.channels.ClosedByInterruptException异常
      *
      * <p> If this thread is blocked in a {@link java.nio.channels.Selector}
      * then the thread's interrupt status will be set and it will return
      * immediately from the selection operation, possibly with a non-zero
      * value, just as if the selector's {@link
      * java.nio.channels.Selector#wakeup wakeup} method were invoked.
+     * 如果这个线程在一个java.nio.channels.Selector中被阻塞, 那么线程的中断状态会被设置, 它将会直接从Selection操作中直接返回,
+     * 可能带一个非0的值, 就像java.nio.channels.Selector#wakeup()方法被调用一样.
      *
      * <p> If none of the previous conditions hold then this thread's interrupt
      * status will be set. </p>
+     * 如果前面的条件都不成立, 那么该线程的中断状态将会被设置.
      *
      * <p> Interrupting a thread that is not alive need not have any effect.
+     * 中断一个不活跃的线程, 没有任何影响。
      * 
      * @throws  SecurityException
      *          if the current thread cannot modify this thread
